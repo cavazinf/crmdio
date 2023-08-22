@@ -1,0 +1,80 @@
+using System;
+using System.Collections.Generic;
+
+namespace SistemaHotel
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            // Exemplo simples de reserva
+            Cliente cliente = new Cliente("João", "Silva");
+            Quarto quarto = new Quarto(101, "Individual", 100.0m);
+            DateTime dataCheckIn = DateTime.Now;
+            DateTime dataCheckOut = DateTime.Now.AddDays(3);
+
+            Reserva reserva = new Reserva(cliente, quarto, dataCheckIn, dataCheckOut);
+            reserva.ImprimirDetalhes();
+
+            Console.ReadLine();
+        }
+    }
+
+    class Cliente
+    {
+        public string Nome { get; set; }
+        public string Sobrenome { get; set; }
+
+        public Cliente(string nome, string sobrenome)
+        {
+            Nome = nome;
+            Sobrenome = sobrenome;
+        }
+    }
+
+    class Quarto
+    {
+        public int Numero { get; set; }
+        public string Categoria { get; set; }
+        public decimal PrecoDiaria { get; set; }
+
+        public Quarto(int numero, string categoria, decimal precoDiaria)
+        {
+            Numero = numero;
+            Categoria = categoria;
+            PrecoDiaria = precoDiaria;
+        }
+    }
+
+    class Reserva
+    {
+        public Cliente Cliente { get; set; }
+        public Quarto Quarto { get; set; }
+        public DateTime DataCheckIn { get; set; }
+        public DateTime DataCheckOut { get; set; }
+
+        public Reserva(Cliente cliente, Quarto quarto, DateTime dataCheckIn, DateTime dataCheckOut)
+        {
+            Cliente = cliente;
+            Quarto = quarto;
+            DataCheckIn = dataCheckIn;
+            DataCheckOut = dataCheckOut;
+        }
+
+        public void ImprimirDetalhes()
+        {
+            Console.WriteLine($"Cliente: {Cliente.Nome} {Cliente.Sobrenome}");
+            Console.WriteLine($"Quarto: {Quarto.Numero} ({Quarto.Categoria})");
+            Console.WriteLine($"Check-in: {DataCheckIn.ToShortDateString()}");
+            Console.WriteLine($"Check-out: {DataCheckOut.ToShortDateString()}");
+            Console.WriteLine($"Preço total: {CalcularPrecoTotal():C}");
+        }
+
+        private decimal CalcularPrecoTotal()
+        {
+            TimeSpan duracao = DataCheckOut - DataCheckIn;
+            int numeroDias = duracao.Days;
+            return numeroDias * Quarto.PrecoDiaria;
+        }
+    }
+}
